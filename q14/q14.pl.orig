@@ -1,0 +1,36 @@
+use strict;
+use warnings;
+use Crypt::Passwd::XS;
+
+open(IN, "< memo.txt") or die("open error :$!");
+
+while (my $line = <IN>)
+{
+  chomp($line);
+
+  my @ary = split(/:/, $line);
+  my $name = $ary[0];
+
+  if ($ary[1] =~ /^(\$6\$[^\$]+)\$/)
+  {
+    my $salt = $1;
+
+    print "Processing $name...\n";
+
+    open(OUT, "> hash_$name.txt") or die("open error :$!");
+    open(IN2, "< dictionary.txt") or die("open error :$!");
+
+    while (my $word = <IN2>)
+    {
+      chomp($word);
+      print OUT "$word : ", +Crypt::Passwd::XS::crypt( $word, $salt ), "\n";
+    }
+
+    close(OUT);
+    close(IN2);
+  }
+
+}
+
+close(IN);
+

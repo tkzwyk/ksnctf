@@ -1,0 +1,27 @@
+実行ファイルの逆アセンブルとデータ書き出しを行う
+
+$ objdump.exe -M intel -S Riddle.exe > riddle.txt
+$ objdump.exe -s Riddle.exe > riddle.data
+
+
+"What is the flag?"が格納されているアドレスを見つける
+$ view riddle.data
+ => 0x403678
+
+"Correct!"の格納アドレス
+ -> 0x0000282c
+    -> 0x2f84
+
+上記アドレスをアセンブラから探す
+$ vim riddle.txt
+ => 見つからない
+
+
+* UIAutomation を使う
+UIAutomationSpy.exe を使って、Riddle.exe のUI要素のIDを調査
+-> 入力テキストボックス : 1000
+   OKボタン : 1
+   正誤表示ウインドウのOKボタン : 2
+   正誤表示ウインドウのテキストエリア : 65535
+
+
